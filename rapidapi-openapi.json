@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "EpubCraft API - Headless EPUB 3 & Amazon KDP Document Compiler",
+    "description": "High-velocity commercial REST microservice for turning raw JSON, Markdown, and HTML manuscripts into pristine, 100% Amazon KDP and Apple Books compliant EPUB 3 files in under 50ms. Features automatic OPF manifest packaging, NCX navigation spines, typographical drop caps, and dynamic 1600x2400 SVG cover art.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://epub-craft-api.vercel.app",
+      "description": "Production Vercel Edge Gateway"
+    }
+  ],
+  "paths": {
+    "/v1/epub/compile": {
+      "post": {
+        "summary": "Compile Manuscript to EPUB 3 Binary or Base64",
+        "description": "Compiles a complete book manuscript (JSON with Markdown or HTML chapters) into a validated EPUB 3 archive. By default returns the binary attachment (`application/epub+zip`), or pass `?format=base64` or `format=json` to receive a JSON object with base64 data.",
+        "operationId": "compileEpub",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Response format: 'binary' (default) or 'base64' (JSON payload)",
+            "schema": {
+              "type": "string",
+              "enum": ["binary", "base64", "json"],
+              "default": "binary"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Manuscript specification including title, author, typography theme, and chapters.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "sections"],
+                "properties": {
+                  "title": { "type": "string", "example": "The Art of Strategy" },
+                  "author": { "type": "string", "example": "Sun Tzu" },
+                  "subtitle": { "type": "string", "example": "Principles of Leadership and Decisive Action" },
+                  "publisher": { "type": "string", "example": "EpubCraft Classics" },
+                  "language": { "type": "string", "example": "en" },
+                  "theme": { 
+                    "type": "string", 
+                    "enum": ["theme-bookerly", "theme-garamond", "theme-ember", "theme-fantasy", "theme-nonfiction"],
+                    "default": "theme-bookerly"
+                  },
+                  "coverPreset": {
+                    "type": "string",
+                    "enum": ["obsidian_gold", "midnight_sapphire", "crimson_mystery", "emerald_legacy", "minimalist_slate"],
+                    "default": "obsidian_gold"
+                  },
+                  "paragraphStyle": {
+                    "type": "string",
+                    "enum": ["style-indented", "style-blocked"],
+                    "default": "style-indented"
+                  },
+                  "coverImage": {
+                    "type": "string",
+                    "description": "Base64 data URL (e.g. data:image/jpeg;base64,...) or raw SVG string. If omitted, a dynamic 1600x2400 KDP cover is auto-generated using coverPreset.",
+                    "example": null
+                  },
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["title", "content"],
+                      "properties": {
+                        "title": { "type": "string", "example": "Laying Plans" },
+                        "chapterNumber": { "type": "string", "example": "Chapter 1" },
+                        "type": { "type": "string", "example": "chapter" },
+                        "includeInToc": { "type": "boolean", "default": true },
+                        "hasDropCap": { "type": "boolean", "default": true },
+                        "content": { "type": "string", "example": "<p>The art of war is of vital importance to the State...</p>" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Valid EPUB 3 binary archive or JSON base64 string",
+            "content": {
+              "application/epub+zip": {
+                "schema": { "type": "string", "format": "binary" }
+              },
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          },
+          "400": {
+            "description": "Manuscript validation or payload structure error"
+          }
+        }
+      }
+    },
+    "/v1/epub/validate": {
+      "post": {
+        "summary": "Pre-flight Manuscript Validation & Reading Time Audit",
+        "description": "Analyzes the manuscript for Amazon KDP compliance, estimates word count and reading time, inspects chapter TOC structure, and returns any validation warnings before compiling.",
+        "operationId": "validateManuscript",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "sections"],
+                "properties": {
+                  "title": { "type": "string" },
+                  "author": { "type": "string" },
+                  "sections": { "type": "array" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Manuscript pre-flight audit report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "readyToCompile": { "type": "boolean" },
+                    "stats": { "type": "object" },
+                    "chapters": { "type": "array" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/epub/sample.epub": {
+      "get": {
+        "summary": "Download Live Sample EPUB 3 Book",
+        "description": "Directly downloads a pre-compiled high-fidelity demonstration EPUB 3 book (The Art of Strategy with Obsidian & Gold cover art and drop caps) for testing with your e-reader hardware or rendering pipelines.",
+        "operationId": "downloadSampleEpub",
+        "responses": {
+          "200": {
+            "description": "Direct EPUB 3 binary stream",
+            "content": {
+              "application/epub+zip": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/epub/themes": {
+      "get": {
+        "summary": "List Typography Themes, Cover Presets & Styles",
+        "description": "Returns all available typography presets (Bookerly, Garamond, Ember, Fantasy), cover art templates, paragraph styling models, and supported front/back matter section types.",
+        "operationId": "listThemes",
+        "responses": {
+          "200": {
+            "description": "List of available typographic themes and cover templates",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

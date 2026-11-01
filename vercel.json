@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/v1/epub/compile", "destination": "/api/compile" },
+    { "source": "/v1/epub/validate", "destination": "/api/validate" },
+    { "source": "/v1/epub/sample.epub", "destination": "/api/sample" },
+    { "source": "/v1/epub/sample", "destination": "/api/sample" },
+    { "source": "/v1/epub/themes", "destination": "/api/themes" },
+    { "source": "/v1/status", "destination": "/api/index" },
+    { "source": "/api/sandbox", "destination": "/api/sandbox" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}

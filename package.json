@@ -1,0 +1,28 @@
+{
+  "name": "epub-craft-api",
+  "version": "1.0.0",
+  "description": "EpubCraft API - Headless EPUB 3 & Amazon KDP Compliant Document Compiler API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "epub",
+    "epub3",
+    "kdp",
+    "kindle",
+    "ebook-generator",
+    "markdown-to-epub",
+    "html-to-epub",
+    "publishing-api",
+    "rapidapi"
+  ],
+  "author": "EpubCraft",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "marked": "^15.0.7"
+  }
+}

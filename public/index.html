@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EpubCraft API - Headless EPUB 3 & Amazon KDP Document Compiler API</title>
+  <meta name="description" content="Commercial REST API for compiling Markdown, HTML, and JSON into pristine, 100% Amazon KDP and Apple Books compliant EPUB 3 files in under 50ms.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #050811;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+    }
+    .font-serif-heading {
+      font-family: 'Cinzel', serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #a16207 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .emerald-gradient-text {
+      background: linear-gradient(135deg, #a7f3d0 0%, #10b981 50%, #047857 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .craft-card {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(234, 179, 8, 0.15);
+    }
+    .glow-gold {
+      box-shadow: 0 0 35px -5px rgba(234, 179, 8, 0.15);
+    }
+    .input-focus:focus {
+      border-color: #eab308;
+      box-shadow: 0 0 15px rgba(234, 179, 8, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-[#eab308] selection:text-[#050811]">
+
+  <!-- Top Announcement Bar -->
+  <aside class="w-full bg-[#0d1527] border-b border-amber-500/20 py-2 px-4 text-xs text-slate-300 text-center flex items-center justify-center space-x-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span><strong>EPUB 3.2 READY:</strong> 100% EPUBCheck, Amazon KDP, and Apple Books compliant bytecode packaging.</span>
+  </aside>
+
+  <!-- Navbar -->
+  <header class="w-full border-b border-slate-800/80 bg-[#070b16]/90 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-amber-500/20">
+          📚
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight text-white font-serif-heading">EpubCraft <span class="text-amber-400 font-sans text-xs px-2 py-0.5 rounded-full border border-amber-400/30 bg-amber-400/10">v1.0 API</span></span>
+          <p class="text-[10px] text-slate-400 tracking-wider uppercase font-mono-code">Headless EPUB 3 Compiler Engine</p>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-6 text-sm text-slate-400 font-medium">
+        <a href="#console" class="hover:text-amber-400 transition">Interactive Console</a>
+        <a href="#endpoints" class="hover:text-amber-400 transition">Endpoints</a>
+        <a href="#code" class="hover:text-amber-400 transition">Code Snippets</a>
+        <a href="#pricing" class="hover:text-amber-400 transition">Marketplace Plans</a>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <a href="https://rapidapi.com" target="_blank" rel="noopener" class="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs tracking-wide shadow-md hover:shadow-amber-500/20 transition">
+          <span>Subscribe on RapidAPI</span>
+          <svg class="w-3.5 h-3.5 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-grow">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 text-center">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 text-xs font-mono-code mb-6">
+        <span>⚡ Pure Serverless Microservice</span>
+        <span>•</span>
+        <span>Sub-50ms Compile Velocity</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6">
+        The Headless <span class="gold-gradient-text font-serif-heading">EPUB 3</span> Compiler API
+      </h1>
+
+      <p class="max-w-3xl mx-auto text-base sm:text-lg text-slate-400 mb-8 leading-relaxed">
+        Stop fighting with OPF manifests, uncompressed mimetype containers, NCX navigation spines, and broken Kindle styling. Send raw JSON, Markdown, or HTML and get back a validated, publication-ready <code class="text-amber-300 font-mono text-sm bg-slate-900 px-1.5 py-0.5 rounded">.epub</code> binary in milliseconds.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-3 text-xs font-mono-code text-slate-300">
+        <span class="px-3 py-1 rounded-md bg-slate-800/80 border border-slate-700">✓ Amazon KDP Validated</span>
+        <span class="px-3 py-1 rounded-md bg-slate-800/80 border border-slate-700">✓ Apple Books & Kobo</span>
+        <span class="px-3 py-1 rounded-md bg-slate-800/80 border border-slate-700">✓ Drop Caps & Typographic Themes</span>
+        <span class="px-3 py-1 rounded-md bg-slate-800/80 border border-slate-700">✓ Dynamic 1600x2400 SVG Cover Art</span>
+      </div>
+    </section>
+
+    <!-- Interactive Live Developer Console -->
+    <section id="console" class="max-w-6xl mx-auto px-4 pb-20">
+      <div class="craft-card rounded-2xl p-6 sm:p-8 border border-amber-500/30 glow-gold">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800/80 mb-6 gap-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold font-serif-heading text-slate-100">Live API Test Bench & Compiler Sandbox</h2>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">Test manuscript payloads live in your browser. Download the resulting .epub binary or inspect the compile report.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="loadPreset('sun_tzu')" class="text-xs px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition">Preset: The Art of Strategy</button>
+            <button onclick="loadPreset('tech_paper')" class="text-xs px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition">Preset: AI Systems Manual</button>
+            <button onclick="loadPreset('novella')" class="text-xs px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition">Preset: Cyberpunk Novella</button>
+          </div>
+        </div>
+
+        <!-- Form Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label class="block text-xs font-mono-code text-slate-300 mb-1.5">Book Title</label>
+            <input type="text" id="inputTitle" value="The Art of Strategy" class="w-full bg-[#020617] border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none input-focus font-medium">
+          </div>
+          <div>
+            <label class="block text-xs font-mono-code text-slate-300 mb-1.5">Author</label>
+            <input type="text" id="inputAuthor" value="Sun Tzu" class="w-full bg-[#020617] border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none input-focus font-medium">
+          </div>
+          <div>
+            <label class="block text-xs font-mono-code text-slate-300 mb-1.5">Subtitle (Optional)</label>
+            <input type="text" id="inputSubtitle" value="Principles of Decisive Action" class="w-full bg-[#020617] border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none input-focus font-medium">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label class="block text-xs font-mono-code text-slate-300 mb-1.5">Typography Theme</label>
+            <select id="inputTheme" class="w-full bg-[#020617] border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none input-focus font-medium">
+              <option value="theme-bookerly" selected>Kindle Bookerly (Fiction Classic)</option>
+              <option value="theme-garamond">Heritage Garamond (Literature)</option>
+              <option value="theme-ember">Modern Ember (Clean Non-Fiction)</option>
+              <option value="theme-fantasy">Cinematic / Fantasy (Ornate)</option>
+              <option value="theme-nonfiction">Executive Editorial (Non-Fiction)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-mono-code text-slate-300 mb-1.5">Cover Art Preset</label>
+            <select id="inputCover" class="w-full bg-[#020617] border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none input-focus font-medium">
+              <option value="obsidian_gold" selected>Obsidian & Gold Foil (1600x2400)</option>
+              <option value="midnight_sapphire">Midnight Sapphire (1600x2400)</option>
+              <option value="crimson_mystery">Crimson Mystery (1600x2400)</option>
+              <option value="emerald_legacy">Emerald Legacy (1600x2400)</option>
+              <option value="minimalist_slate">Minimalist Slate (1600x2400)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-mono-code text-slate-300 mb-1.5">Paragraph Formatting</label>
+            <select id="inputParagraph" class="w-full bg-[#020617] border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-slate-100 focus:outline-none input-focus font-medium">
+              <option value="style-indented" selected>Indented (Traditional Fiction)</option>
+              <option value="style-blocked">Blocked Spacing (Modern Tech)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Markdown / Chapter Body Editor -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-mono-code text-slate-300">Chapter 1 Content (Markdown or HTML)</label>
+            <span class="text-[11px] text-slate-500 font-mono-code">Accepts raw Markdown, headings, & HTML</span>
+          </div>
+          <textarea id="inputContent" rows="6" class="w-full bg-[#020617] border border-slate-700 rounded-lg p-3 text-sm text-slate-200 font-mono-code focus:outline-none input-focus">### Chapter 1: Laying Plans
+
+The art of war is of vital importance to the State. It is a matter of life and death, a road either to safety or to ruin. Hence it is a subject of inquiry which can on no account be neglected.
+
+The moral law causes the people to be in complete accord with their ruler, so that they will follow him regardless of their lives, undismayed by any danger.
+
+Heaven signifies night and day, cold and heat, times and the seasons. Earth comprises distances, great and small; danger and security; open ground and narrow passes; the chances of life and death.</textarea>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800">
+          <div class="flex items-center space-x-3">
+            <button onclick="runCompile('json')" id="compileBtn" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-sm hover:brightness-110 transition shadow-md flex items-center space-x-2">
+              <span>⚡ Compile & Inspect Payload</span>
+            </button>
+            <button onclick="runCompile('download')" class="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-semibold text-sm transition flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>Download Real .EPUB</span>
+            </button>
+          </div>
+          <div class="text-xs font-mono-code text-slate-400">
+            Endpoint: <code class="text-amber-400">POST /v1/epub/compile</code>
+          </div>
+        </div>
+
+        <!-- Output Result Box -->
+        <div class="mt-6 bg-[#020617] rounded-xl border border-slate-800 p-4">
+          <div class="flex items-center justify-between mb-3 text-xs font-mono-code pb-2 border-b border-slate-800">
+            <span id="statusBadge" class="text-slate-400">Sandbox Status: Ready</span>
+            <span id="latencyBadge" class="text-emerald-400">Latency: -- ms</span>
+          </div>
+          <pre id="outputPre" class="text-xs text-amber-300/90 font-mono-code overflow-x-auto max-h-64 p-2 bg-[#050811] rounded border border-slate-800/80">Click "Compile & Inspect Payload" to run live test compilation...</pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- API Endpoints Spec Grid -->
+    <section id="endpoints" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-800/80">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl sm:text-3xl font-bold font-serif-heading text-white">Commercial Endpoints</h2>
+        <p class="text-slate-400 text-sm mt-2">Ultra-clean RESTful specification built for high-throughput automated workflows.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Endpoint 1 -->
+        <div class="craft-card rounded-xl p-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs font-mono-code font-bold">POST</span>
+              <code class="text-sm font-mono-code text-slate-200">/v1/epub/compile</code>
+            </div>
+            <span class="text-xs text-amber-400 font-mono-code">Core</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">Compiles full manuscript into a binary or base64 EPUB 3 archive. Auto-generates NCX, OPF, cover art, and XHTML navigation.</p>
+          <div class="text-[11px] font-mono-code text-slate-500 bg-slate-950 p-2 rounded">
+            Header: Content-Type: application/json<br>
+            Response: application/epub+zip OR application/json (base64)
+          </div>
+        </div>
+
+        <!-- Endpoint 2 -->
+        <div class="craft-card rounded-xl p-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs font-mono-code font-bold">POST</span>
+              <code class="text-sm font-mono-code text-slate-200">/v1/epub/validate</code>
+            </div>
+            <span class="text-xs text-slate-400 font-mono-code">Pre-flight</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">Checks manuscript structure, word count, estimated reading time, and Amazon KDP pre-flight compliance before compilation.</p>
+          <div class="text-[11px] font-mono-code text-slate-500 bg-slate-950 p-2 rounded">
+            Returns: { readyToCompile: true, stats: { totalWords, readingTime } }
+          </div>
+        </div>
+
+        <!-- Endpoint 3 -->
+        <div class="craft-card rounded-xl p-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-xs font-mono-code font-bold">GET</span>
+              <code class="text-sm font-mono-code text-slate-200">/v1/epub/sample.epub</code>
+            </div>
+            <span class="text-xs text-slate-400 font-mono-code">Instant Test</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">Instantly stream-downloads a demonstration EPUB 3 book for zero-configuration integration testing.</p>
+          <div class="text-[11px] font-mono-code text-slate-500 bg-slate-950 p-2 rounded">
+            Direct download: the-art-of-strategy.epub (application/epub+zip)
+          </div>
+        </div>
+
+        <!-- Endpoint 4 -->
+        <div class="craft-card rounded-xl p-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 text-xs font-mono-code font-bold">GET</span>
+              <code class="text-sm font-mono-code text-slate-200">/v1/epub/themes</code>
+            </div>
+            <span class="text-xs text-slate-400 font-mono-code">Metadata</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">Lists all typography themes (Bookerly, Garamond, Ember, Fantasy), cover art templates, and section types.</p>
+          <div class="text-[11px] font-mono-code text-slate-500 bg-slate-950 p-2 rounded">
+            Returns: { typographyThemes: [...], coverPresets: [...] }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Snippets -->
+    <section id="code" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-800/80">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl sm:text-3xl font-bold font-serif-heading text-white">Integration Snippets</h2>
+        <p class="text-slate-400 text-sm mt-1">Copy and paste into your backend in seconds.</p>
+      </div>
+
+      <div class="craft-card rounded-2xl p-6 border border-slate-800 max-w-4xl mx-auto">
+        <div class="flex items-center space-x-2 border-b border-slate-800 pb-3 mb-4 text-xs font-mono-code">
+          <button onclick="showSnippet('curl')" id="tab-curl" class="px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 font-bold">cURL</button>
+          <button onclick="showSnippet('node')" id="tab-node" class="px-3 py-1.5 rounded text-slate-400 hover:text-slate-200">Node.js</button>
+          <button onclick="showSnippet('python')" id="tab-python" class="px-3 py-1.5 rounded text-slate-400 hover:text-slate-200">Python</button>
+        </div>
+
+        <pre id="snippetPre" class="text-xs font-mono-code text-slate-300 overflow-x-auto bg-[#020617] p-4 rounded-lg border border-slate-800/80">curl -X POST "https://epub-craft-api.vercel.app/v1/epub/compile" \
+  -H "Content-Type: application/json" \
+  -H "X-RapidAPI-Key: YOUR_RAPIDAPI_KEY" \
+  --data '{
+    "title": "My Next Bestseller",
+    "author": "Jane Author",
+    "theme": "theme-bookerly",
+    "coverPreset": "obsidian_gold",
+    "sections": [
+      {
+        "title": "Chapter 1",
+        "hasDropCap": true,
+        "content": "<p>It was a dark and stormy night...</p>"
+      }
+    ]
+  }' --output my_book.epub</pre>
+      </div>
+    </section>
+
+    <!-- Pricing Grid -->
+    <section id="pricing" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-slate-800/80">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl sm:text-3xl font-bold font-serif-heading text-white">Marketplace Pricing Tiers</h2>
+        <p class="text-slate-400 text-sm mt-2">Monetized seamlessly on the RapidAPI Marketplace with automatic rate limiting.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Basic -->
+        <div class="craft-card rounded-xl p-6 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="text-sm font-semibold text-slate-300 mb-1">Developer Free</div>
+            <div class="text-2xl font-bold text-white mb-2">$0 <span class="text-xs font-normal text-slate-400">/ mo</span></div>
+            <p class="text-xs text-slate-400 mb-4">For sandbox testing and personal hackathons.</p>
+            <ul class="text-xs space-y-2 text-slate-300 mb-6 font-mono-code">
+              <li>✓ 50 Requests / mo</li>
+              <li>✓ All Themes & Presets</li>
+              <li>✓ EPUB 3.2 & KDP Ready</li>
+              <li>✗ $0.05 / extra call</li>
+            </ul>
+          </div>
+          <a href="https://rapidapi.com" target="_blank" class="w-full py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center block transition">Start Free</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="craft-card rounded-xl p-6 border border-amber-500/50 bg-slate-900/80 relative flex flex-col justify-between">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 bg-amber-500 text-slate-950 font-bold text-[10px] rounded-full uppercase tracking-wider">Most Popular</div>
+          <div>
+            <div class="text-sm font-semibold text-amber-400 mb-1">Pro Author / SaaS</div>
+            <div class="text-2xl font-bold text-white mb-2">$19 <span class="text-xs font-normal text-slate-400">/ mo</span></div>
+            <p class="text-xs text-slate-400 mb-4">For AI writing apps and newsletter exports.</p>
+            <ul class="text-xs space-y-2 text-slate-200 mb-6 font-mono-code">
+              <li>✓ 1,500 Requests / mo</li>
+              <li>✓ Uncapped Book Sizes</li>
+              <li>✓ Custom CSS Overrides</li>
+              <li>✓ Base64 or Binary Stream</li>
+            </ul>
+          </div>
+          <a href="https://rapidapi.com" target="_blank" class="w-full py-2 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold text-center block transition">Subscribe Pro</a>
+        </div>
+
+        <!-- Ultra -->
+        <div class="craft-card rounded-xl p-6 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="text-sm font-semibold text-slate-300 mb-1">Scale Publisher</div>
+            <div class="text-2xl font-bold text-white mb-2">$49 <span class="text-xs font-normal text-slate-400">/ mo</span></div>
+            <p class="text-xs text-slate-400 mb-4">High-throughput publishing platforms.</p>
+            <ul class="text-xs space-y-2 text-slate-300 mb-6 font-mono-code">
+              <li>✓ 10,000 Requests / mo</li>
+              <li>✓ Priority Edge Routing</li>
+              <li>✓ Dedicated SLA</li>
+              <li>✓ Fast Support</li>
+            </ul>
+          </div>
+          <a href="https://rapidapi.com" target="_blank" class="w-full py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center block transition">Subscribe Scale</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="craft-card rounded-xl p-6 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="text-sm font-semibold text-slate-300 mb-1">Enterprise High-Load</div>
+            <div class="text-2xl font-bold text-white mb-2">$149 <span class="text-xs font-normal text-slate-400">/ mo</span></div>
+            <p class="text-xs text-slate-400 mb-4">Massive volume AI document pipelines.</p>
+            <ul class="text-xs space-y-2 text-slate-300 mb-6 font-mono-code">
+              <li>✓ 50,000 Requests / mo</li>
+              <li>✓ Custom Whitelabeling</li>
+              <li>✓ 99.99% Uptime Guarantee</li>
+              <li>✓ 24/7 Slack Channel</li>
+            </ul>
+          </div>
+          <a href="https://rapidapi.com" target="_blank" class="w-full py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center block transition">Subscribe Mega</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-slate-800/80 bg-[#04060d] py-8 text-center text-xs text-slate-500 font-mono-code">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>EpubCraft API © 2026. Built for RapidAPI Marketplace & Vercel Edge.</div>
+      <div class="flex items-center space-x-4">
+        <a href="/v1/status" class="hover:text-amber-400 transition">API Status</a>
+        <span>•</span>
+        <a href="/v1/epub/themes" class="hover:text-amber-400 transition">Theme Spec</a>
+        <span>•</span>
+        <a href="/rapidapi-openapi.json" class="hover:text-amber-400 transition">OpenAPI 3.0</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Client-side Logic -->
+  <script>
+    const PRESETS = {
+      sun_tzu: {
+        title: "The Art of Strategy",
+        author: "Sun Tzu",
+        subtitle: "Principles of Leadership and Decisive Action",
+        theme: "theme-bookerly",
+        cover: "obsidian_gold",
+        paragraph: "style-indented",
+        content: `### Chapter 1: Laying Plans\\n\\nThe art of war is of vital importance to the State. It is a matter of life and death, a road either to safety or to ruin. Hence it is a subject of inquiry which can on no account be neglected.\\n\\nThe moral law causes the people to be in complete accord with their ruler, so that they will follow him regardless of their lives, undismayed by any danger.`
+      },
+      tech_paper: {
+        title: "Autonomous Agent Architecture",
+        author: "Systems Research Lab",
+        subtitle: "A Blueprint for Edge Microservices",
+        theme: "theme-ember",
+        cover: "midnight_sapphire",
+        paragraph: "style-blocked",
+        content: `### Section 1: Execution Pipelines\\n\\nModern distributed agent architectures rely on declarative specifications and sub-50ms execution loops.\\n\\n\`\`\`javascript\\nconst agent = new AgentRuntime({\\n  concurrency: 16,\\n  edge: true\\n});\\n\`\`\`\\n\\nBy abstracting document packaging into pure serverless edge endpoints, total memory utilization drops by over 80%.`
+      },
+      novella: {
+        title: "Neon Echoes",
+        author: "K. R. Sterling",
+        subtitle: "A Cyberpunk Chronology",
+        theme: "theme-fantasy",
+        cover: "crimson_mystery",
+        paragraph: "style-indented",
+        content: `### Act 1: The Wetware Syndicate\\n\\nRain fell like liquid static against the neon sprawl of Sector 9. Jax tapped the optical implant at his temple, waiting for the decryption key to sync.\\n\\nThe signal was faint, but unmistakable: a ghost handshake from a server that had been offline for twenty years.`
+      }
+    };
+
+    function loadPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      document.getElementById('inputTitle').value = p.title;
+      document.getElementById('inputAuthor').value = p.author;
+      document.getElementById('inputSubtitle').value = p.subtitle;
+      document.getElementById('inputTheme').value = p.theme;
+      document.getElementById('inputCover').value = p.cover;
+      document.getElementById('inputParagraph').value = p.paragraph;
+      document.getElementById('inputContent').value = p.content.replace(/\\n/g, '\n');
+    }
+
+    async function runCompile(mode) {
+      const title = document.getElementById('inputTitle').value.trim() || 'Untitled';
+      const author = document.getElementById('inputAuthor').value.trim() || 'Anonymous';
+      const subtitle = document.getElementById('inputSubtitle').value.trim();
+      const theme = document.getElementById('inputTheme').value;
+      const coverPreset = document.getElementById('inputCover').value;
+      const paragraphStyle = document.getElementById('inputParagraph').value;
+      const content = document.getElementById('inputContent').value;
+
+      const payload = {
+        title,
+        author,
+        subtitle,
+        theme,
+        coverPreset,
+        paragraphStyle,
+        sections: [
+          {
+            title: title + " - Chapter 1",
+            chapterNumber: "Chapter 1",
+            type: "chapter",
+            includeInToc: true,
+            hasDropCap: true,
+            content: content
+          }
+        ]
+      };
+
+      const start = Date.now();
+      document.getElementById('statusBadge').innerText = 'Sandbox Status: Compiling...';
+      document.getElementById('statusBadge').className = 'text-amber-400 font-mono-code';
+
+      try {
+        if (mode === 'download') {
+          // Trigger direct binary download
+          window.location.href = '/api/sandbox?download=true';
+          document.getElementById('statusBadge').innerText = 'Sandbox Status: Download Initiated';
+          document.getElementById('statusBadge').className = 'text-emerald-400 font-mono-code';
+          document.getElementById('latencyBadge').innerText = 'Latency: ' + (Date.now() - start) + ' ms';
+          return;
+        }
+
+        const resp = await fetch('/api/sandbox', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await resp.json();
+        const elapsed = Date.now() - start;
+
+        document.getElementById('latencyBadge').innerText = 'Latency: ' + elapsed + ' ms';
+        document.getElementById('statusBadge').innerText = 'Sandbox Status: Success (HTTP ' + resp.status + ')';
+        document.getElementById('statusBadge').className = 'text-emerald-400 font-mono-code';
+
+        // Format clean output
+        const previewData = { ...data };
+        if (previewData.base64) {
+          previewData.base64 = previewData.base64.substring(0, 80) + '... [truncated for display, total bytes: ' + previewData.sizeBytes + ']';
+        }
+        document.getElementById('outputPre').innerText = JSON.stringify(previewData, null, 2);
+
+      } catch (err) {
+        document.getElementById('statusBadge').innerText = 'Sandbox Status: Error';
+        document.getElementById('statusBadge').className = 'text-red-400 font-mono-code';
+        document.getElementById('outputPre').innerText = 'Error: ' + err.message;
+      }
+    }
+
+    const SNIPPETS = {
+      curl: `curl -X POST "https://epub-craft-api.vercel.app/v1/epub/compile" \\
+  -H "Content-Type: application/json" \\
+  -H "X-RapidAPI-Key: YOUR_RAPIDAPI_KEY" \\
+  --data '{
+    "title": "My Next Bestseller",
+    "author": "Jane Author",
+    "theme": "theme-bookerly",
+    "coverPreset": "obsidian_gold",
+    "sections": [
+      {
+        "title": "Chapter 1",
+        "hasDropCap": true,
+        "content": "<p>It was a dark and stormy night...</p>"
+      }
+    ]
+  }' --output my_book.epub`,
+
+      node: `const fs = require('fs');
+
+async function compileBook() {
+  const response = await fetch('https://epub-craft-api.vercel.app/v1/epub/compile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-RapidAPI-Key': 'YOUR_RAPIDAPI_KEY',
+      'X-RapidAPI-Host': 'epub-craft-api.p.rapidapi.com'
+    },
+    body: JSON.stringify({
+      title: "Automated AI Novel",
+      author: "Claude / GPT-4",
+      sections: [
+        { title: "Introduction", content: "# Welcome\\nGenerated book text..." }
+      ]
+    })
+  });
+
+  const arrayBuffer = await response.arrayBuffer();
+  fs.writeFileSync('output.epub', Buffer.from(arrayBuffer));
+  console.log('Saved output.epub!');
+}
+
+compileBook();`,
+
+      python: `import requests
+
+url = "https://epub-craft-api.vercel.app/v1/epub/compile"
+
+payload = {
+    "title": "Automated Deep-Dive",
+    "author": "Python Publisher",
+    "theme": "theme-nonfiction",
+    "sections": [
+        {"title": "Executive Summary", "content": "<h1>Summary</h1><p>Key findings...</p>"}
+    ]
+}
+
+headers = {
+    "Content-Type": "application/json",
+    "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
+    "X-RapidAPI-Host": "epub-craft-api.p.rapidapi.com"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+
+with open("book.epub", "wb") as f:
+    f.write(response.content)
+
+print("Saved book.epub successfully!")`
+    };
+
+    function showSnippet(lang) {
+      document.getElementById('snippetPre').innerText = SNIPPETS[lang];
+      ['curl', 'node', 'python'].forEach(l => {
+        const btn = document.getElementById('tab-' + l);
+        if (l === lang) {
+          btn.className = 'px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 font-bold';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded text-slate-400 hover:text-slate-200';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
