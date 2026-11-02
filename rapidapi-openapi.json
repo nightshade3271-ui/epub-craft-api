@@ -80,6 +80,24 @@
                     }
                   }
                 }
+              },
+              "example": {
+                "title": "The Art of Strategy",
+                "author": "Sun Tzu",
+                "subtitle": "Principles of Decisive Action",
+                "theme": "theme-bookerly",
+                "coverPreset": "obsidian_gold",
+                "paragraphStyle": "style-indented",
+                "sections": [
+                  {
+                    "title": "Chapter 1: Laying Plans",
+                    "chapterNumber": "Chapter 1",
+                    "type": "chapter",
+                    "includeInToc": true,
+                    "hasDropCap": true,
+                    "content": "The art of war is of vital importance to the State. It is a matter of life and death, a road either to safety or to ruin."
+                  }
+                ]
               }
             }
           }

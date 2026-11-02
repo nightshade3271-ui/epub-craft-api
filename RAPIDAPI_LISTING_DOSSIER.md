@@ -101,3 +101,4 @@ Navigate to **Plans & Pricing** in RapidAPI Provider Studio and configure these 
 * To lock your Vercel endpoint so only paying RapidAPI subscribers can call it, add this secret to your Vercel project environment variables:
   * Variable Name: `RAPIDAPI_PROXY_SECRET`
   * Variable Value: *(Copy from RapidAPI Gateway settings)*
+

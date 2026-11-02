@@ -36,18 +36,23 @@ module.exports = async (req, res) => {
       try {
         payload = JSON.parse(payload);
       } catch (e) {
-        res.statusCode = 400;
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ error: 'Invalid JSON', message: 'Could not parse JSON body.' }));
-        return;
+        payload = {};
       }
     }
 
-    if (!payload || typeof payload !== 'object') {
-      res.statusCode = 400;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: 'Invalid Body', message: 'Payload must be a JSON object containing title and sections.' }));
-      return;
+    const sampleBook = require('../lib/sampleBook.js');
+    if (!payload || typeof payload !== 'object' || Object.keys(payload).length === 0 || !Array.isArray(payload.sections) || payload.sections.length === 0) {
+      payload = {
+        title: (payload && payload.title) || sampleBook.title,
+        author: (payload && payload.author) || sampleBook.author,
+        subtitle: (payload && payload.subtitle) || sampleBook.subtitle,
+        publisher: (payload && payload.publisher) || sampleBook.publisher,
+        language: (payload && payload.language) || sampleBook.language,
+        theme: (payload && payload.theme) || sampleBook.theme,
+        coverPreset: (payload && payload.coverPreset) || sampleBook.coverPreset,
+        paragraphStyle: (payload && payload.paragraphStyle) || sampleBook.paragraphStyle,
+        sections: (payload && Array.isArray(payload.sections) && payload.sections.length > 0) ? payload.sections : sampleBook.sections
+      };
     }
 
     const options = {
