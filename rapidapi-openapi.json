@@ -15,21 +15,8 @@
     "/v1/epub/compile": {
       "post": {
         "summary": "Compile Manuscript to EPUB 3 Binary or Base64",
-        "description": "Compiles a complete book manuscript (JSON with Markdown or HTML chapters) into a validated EPUB 3 archive. By default returns the binary attachment (`application/epub+zip`), or pass `?format=base64` or `format=json` to receive a JSON object with base64 data.",
+        "description": "Compiles a complete book manuscript (JSON with Markdown or HTML chapters) into a validated EPUB 3 archive. By default returns the binary attachment (`application/epub+zip`), or set `format: base64` in the body to receive a JSON object with base64 data.",
         "operationId": "compileEpub",
-        "parameters": [
-          {
-            "name": "format",
-            "in": "query",
-            "required": false,
-            "description": "Response format: 'binary' (default) or 'base64' (JSON payload)",
-            "schema": {
-              "type": "string",
-              "enum": ["binary", "base64", "json"],
-              "default": "binary"
-            }
-          }
-        ],
         "requestBody": {
           "required": false,
           "content": {
