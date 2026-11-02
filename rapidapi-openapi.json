@@ -31,55 +31,11 @@
           }
         ],
         "requestBody": {
-          "required": true,
-          "description": "Manuscript specification including title, author, typography theme, and chapters.",
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["title", "sections"],
-                "properties": {
-                  "title": { "type": "string", "example": "The Art of Strategy" },
-                  "author": { "type": "string", "example": "Sun Tzu" },
-                  "subtitle": { "type": "string", "example": "Principles of Leadership and Decisive Action" },
-                  "publisher": { "type": "string", "example": "EpubCraft Classics" },
-                  "language": { "type": "string", "example": "en" },
-                  "theme": { 
-                    "type": "string", 
-                    "enum": ["theme-bookerly", "theme-garamond", "theme-ember", "theme-fantasy", "theme-nonfiction"],
-                    "default": "theme-bookerly"
-                  },
-                  "coverPreset": {
-                    "type": "string",
-                    "enum": ["obsidian_gold", "midnight_sapphire", "crimson_mystery", "emerald_legacy", "minimalist_slate"],
-                    "default": "obsidian_gold"
-                  },
-                  "paragraphStyle": {
-                    "type": "string",
-                    "enum": ["style-indented", "style-blocked"],
-                    "default": "style-indented"
-                  },
-                  "coverImage": {
-                    "type": "string",
-                    "description": "Base64 data URL (e.g. data:image/jpeg;base64,...) or raw SVG string. If omitted, a dynamic 1600x2400 KDP cover is auto-generated using coverPreset.",
-                    "example": null
-                  },
-                  "sections": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "required": ["title", "content"],
-                      "properties": {
-                        "title": { "type": "string", "example": "Laying Plans" },
-                        "chapterNumber": { "type": "string", "example": "Chapter 1" },
-                        "type": { "type": "string", "example": "chapter" },
-                        "includeInToc": { "type": "boolean", "default": true },
-                        "hasDropCap": { "type": "boolean", "default": true },
-                        "content": { "type": "string", "example": "<p>The art of war is of vital importance to the State...</p>" }
-                      }
-                    }
-                  }
-                }
+                "$ref": "#/components/schemas/ManuscriptPayload"
               },
               "example": {
                 "title": "The Art of Strategy",
@@ -126,17 +82,21 @@
         "description": "Analyzes the manuscript for Amazon KDP compliance, estimates word count and reading time, inspects chapter TOC structure, and returns any validation warnings before compiling.",
         "operationId": "validateManuscript",
         "requestBody": {
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["title", "sections"],
-                "properties": {
-                  "title": { "type": "string" },
-                  "author": { "type": "string" },
-                  "sections": { "type": "array" }
-                }
+                "$ref": "#/components/schemas/ManuscriptPayload"
+              },
+              "example": {
+                "title": "The Art of Strategy",
+                "author": "Sun Tzu",
+                "sections": [
+                  {
+                    "title": "Chapter 1",
+                    "content": "Sample content for validation check."
+                  }
+                ]
               }
             }
           }
@@ -147,12 +107,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "readyToCompile": { "type": "boolean" },
-                    "stats": { "type": "object" },
-                    "chapters": { "type": "array" }
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -194,6 +149,52 @@
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "ManuscriptPayload": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "example": "The Art of Strategy" },
+          "author": { "type": "string", "example": "Sun Tzu" },
+          "subtitle": { "type": "string", "example": "Principles of Leadership and Decisive Action" },
+          "publisher": { "type": "string", "example": "EpubCraft Classics" },
+          "language": { "type": "string", "example": "en" },
+          "theme": { 
+            "type": "string", 
+            "enum": ["theme-bookerly", "theme-garamond", "theme-ember", "theme-fantasy", "theme-nonfiction"],
+            "default": "theme-bookerly"
+          },
+          "coverPreset": {
+            "type": "string",
+            "enum": ["obsidian_gold", "midnight_sapphire", "crimson_mystery", "emerald_legacy", "minimalist_slate"],
+            "default": "obsidian_gold"
+          },
+          "paragraphStyle": {
+            "type": "string",
+            "enum": ["style-indented", "style-blocked"],
+            "default": "style-indented"
+          },
+          "coverImage": {
+            "type": "string",
+            "description": "Base64 data URL or raw SVG string. Auto-generated if omitted."
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string", "example": "Chapter 1" },
+                "chapterNumber": { "type": "string", "example": "Chapter 1" },
+                "type": { "type": "string", "example": "chapter" },
+                "includeInToc": { "type": "boolean", "default": true },
+                "hasDropCap": { "type": "boolean", "default": true },
+                "content": { "type": "string", "example": "The art of war is of vital importance to the State." }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
-
